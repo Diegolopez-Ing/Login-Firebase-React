@@ -4,15 +4,24 @@ import {auth} from '../firebaseConfig'
 const Login = () => {
     const [email, setemail] = useState('')
     const [pass, setpass] = useState('')
+    const [msgerror, setmsgError] = useState(null)
 
     const RegistrarUsuario=(e)=>{
         e.preventDefault()
-        try {
-            auth.createUserWithEmailAndPassword(email,pass)
-            alert('Usuario registrado')
-        } catch (error) {
-            console.log(error);
-        }
+        auth.createUserWithEmailAndPassword(email,pass)
+            .then(r=>alert('Usuario registrado'))
+            .catch (e => {
+            // "auth/invalid-email"
+            // auth/weak-password"
+            if (e.code=='auth/invalid-email') {
+                setmsgError('Formato de email Incorrecto')
+                
+            }
+            if (e.code=='auth/weak-password') {
+                setmsgError('La password debe tener 6 caracteres o más')
+                
+            }
+        })
     }
 
     return (
@@ -24,7 +33,7 @@ const Login = () => {
                         onChange={(e)=>{setemail(e.target.value)}}
                         className='form-control mt-4' 
                         placeholder='Introduce el Email' 
-                        type="text"
+                        type="email"
                     />
 
                     <input 
@@ -32,12 +41,25 @@ const Login = () => {
                         className='form-control mt-4' 
                         placeholder='Introduce la Password' 
                         type="password"
+                        required='enable'
                     />
                 <input 
                     className='btn btn-dark btn-block mt-4' 
                     type="submit" 
                     value='Registrar Usuarios' value='Registrar Usuarios'></input>
                  </form>
+                 {
+                     msgerror != null ? 
+                     (
+                         <div>
+                             {msgerror}
+                         </div>
+                     )
+                     :
+                     (
+                        <span></span> 
+                     )
+                 }
                 </div>         
             <div className="col"></div>
         </div>

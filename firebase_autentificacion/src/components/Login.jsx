@@ -9,7 +9,7 @@ const Login = () => {
     const RegistrarUsuario=(e)=>{
         e.preventDefault()
         auth.createUserWithEmailAndPassword(email,pass)
-            .then(r=>alert('Usuario registrado'))
+            .then(r=>alert('Usuario registrado'),setmsgError(''))
             .catch (e => {
             // "auth/invalid-email"
             // auth/weak-password"
@@ -24,6 +24,16 @@ const Login = () => {
         })
     }
 
+    const LoginUsuario=()=>{
+        auth.signInWithEmailAndPassword(email,pass)
+        .then((r)=>console.log(r),setmsgError(''))
+        .catch((error)=>{
+            if (error.code=='auth/wrong-password') {
+                setmsgError('Password Incorrecta')
+            }
+            
+        })
+    }
     return (
         <div className="row mt-5">
             <div className="col"></div>
@@ -48,6 +58,7 @@ const Login = () => {
                     type="submit" 
                     value='Registrar Usuarios' value='Registrar Usuarios'></input>
                  </form>
+                 <button onClick={LoginUsuario} className='btn btn-success btn-block'>Iniciar sesion</button>
                  {
                      msgerror != null ? 
                      (

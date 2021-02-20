@@ -1,11 +1,13 @@
 import React,{useEffect,useState}from 'react'
-import {Link} from 'react-router-dom'
+import {Link,useHistory} from 'react-router-dom'
 import {auth} from '../firebaseConfig'
 
 
 
 
 const Menu = () => {
+    const historial=useHistory()
+
     const [usuario, setusuario] = useState(null)
 
     useEffect(() => {
@@ -20,15 +22,39 @@ const Menu = () => {
     const CerrarSesion=()=>{
         auth.signOut()
         setusuario(null)
+        historial.push('/login')
     }
 
     return (
         <div>
            <nav className='navbar navbar-expand-lg navbar-dark bg-dark'>
                <ul className='navbar-nav mr-auto'>
-                   <li className='nav-item'><Link to='/'>Inicio</Link></li>
-                   <li><Link className='nav-link' to='/login'>Login</Link></li>
-                   <li><Link className='nav-link' to='/admin'>Admin</Link></li>
+                   <li className='nav-item'><Link className='nav-link' to='/'>Inicio</Link></li>
+                   <li className='nav-item'>
+                        {
+                            !usuario ?
+                            (
+                                <Link className='nav-link' to='/login'>Login</Link>
+                            )
+                            :
+                            (
+                                <span></span>
+                            )
+                        }
+                    </li>
+                   <li className='nav-item'>
+                       {
+                           usuario ?
+                           (
+                            <Link className='nav-link' to='/admin'>Admin</Link>
+                           )
+                           :
+                           (
+                               <span></span>
+                           )
+                       }
+
+                   </li>
                </ul>
                {
                    usuario ? 
